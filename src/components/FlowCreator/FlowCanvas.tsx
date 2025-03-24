@@ -29,6 +29,7 @@ import SendSMSNode from './nodes/SendSMSNode';
 import HangupCallNode from './nodes/HangupCallNode';
 import OpenAINode from './nodes/OpenAINode';
 import OnCallNode from './nodes/OnCallNode';
+import SaveFlow from './SaveFlow';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -72,11 +73,8 @@ const FlowCanvas: React.FC = () => {
       const newEdge = {
         ...params,
         id: `e-${params.source}-${params.target}-${new Date().getTime()}`,
-        // Add animated property as default
         animated: true,
-        // Add style property as default
         style: { stroke: '#10b981', strokeWidth: 2 },
-        // Add marker end for arrow
         markerEnd: {
           type: MarkerType.ArrowClosed,
           color: '#10b981'
@@ -185,6 +183,11 @@ const FlowCanvas: React.FC = () => {
           <Background color="#10b981" gap={16} variant={BackgroundVariant.Dots} />
           <Controls className="m-4" />
           <MiniMap className="rounded-lg bg-white border shadow-sm" />
+          
+          {/* Add SaveFlow button */}
+          <div className="absolute top-2 left-2 z-10">
+            <SaveFlow />
+          </div>
           
           {selectedNode && (
             <div className="absolute top-2 right-2 bg-white p-2 rounded-lg shadow-md z-10 border">
