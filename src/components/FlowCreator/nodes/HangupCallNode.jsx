@@ -2,7 +2,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
-const HangupCallNode: React.FC<any> = ({ data }) => {
+const HangupCallNode = ({ data }) => {
   return (
     <div className="flow-node-box call">
       <Handle type="target" position={Position.Top} />

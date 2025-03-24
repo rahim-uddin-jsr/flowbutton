@@ -2,7 +2,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
-const CaptureDataNode: React.FC<any> = ({ data }) => {
+const CaptureDataNode = ({ data }) => {
   return (
     <div className="flow-node-box capture">
       <Handle type="target" position={Position.Top} />

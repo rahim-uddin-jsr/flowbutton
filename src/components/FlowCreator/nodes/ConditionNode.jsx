@@ -2,7 +2,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
-const ConditionNode: React.FC<any> = ({ data }) => {
+const ConditionNode = ({ data }) => {
   return (
     <div className="flow-node-box condition">
       <Handle type="target" position={Position.Top} />

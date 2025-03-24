@@ -1,13 +1,7 @@
 
 import React from 'react';
 
-interface NodeTypeItem {
-  type: string;
-  label: string;
-  className: string;
-}
-
-const nodeTypes: NodeTypeItem[] = [
+const nodeTypes = [
   { type: 'onCall', label: 'On Call', className: 'call-start' },
   { type: 'gather', label: 'Gather', className: 'gather' },
   { type: 'say', label: 'Say', className: 'say' },
@@ -19,8 +13,8 @@ const nodeTypes: NodeTypeItem[] = [
   { type: 'openAI', label: 'OpenAI', className: 'ai' }
 ];
 
-const NodePanel: React.FC = () => {
-  const onDragStart = (event: React.DragEvent, nodeType: string, label: string) => {
+const NodePanel = () => {
+  const onDragStart = (event, nodeType, label) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.setData('application/nodeLabel', label);
     event.dataTransfer.effectAllowed = 'move';

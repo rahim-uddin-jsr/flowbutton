@@ -8,13 +8,8 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
-  Connection,
-  Edge,
-  Node,
-  ReactFlowInstance,
-  ReactFlowProvider,
-  BackgroundVariant,
-  MarkerType
+  MarkerType,
+  ReactFlowProvider
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Loader2, X, Link as LinkIcon } from 'lucide-react';
@@ -45,14 +40,14 @@ const nodeTypes = {
   onCall: OnCallNode
 };
 
-const FlowCanvas: React.FC = () => {
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+const FlowCanvas = () => {
+  const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedNode, setSelectedNode] = useState(null);
 
   useEffect(() => {
     // Simulate loading time
@@ -63,12 +58,12 @@ const FlowCanvas: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+  const onNodeClick = useCallback((event, node) => {
     setSelectedNode(node);
   }, []);
 
   const onConnect = useCallback(
-    (params: Connection | Edge) => {
+    (params) => {
       // Create a new edge with the required properties
       const newEdge = {
         ...params,
@@ -81,18 +76,18 @@ const FlowCanvas: React.FC = () => {
         }
       };
       
-      setEdges((eds) => addEdge(newEdge as Edge, eds));
+      setEdges((eds) => addEdge(newEdge, eds));
     },
     [setEdges]
   );
 
-  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+  const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const onDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
+    (event) => {
       event.preventDefault();
 
       if (!reactFlowInstance || !reactFlowWrapper.current) return;
@@ -121,7 +116,7 @@ const FlowCanvas: React.FC = () => {
   );
 
   const onEdgeDoubleClick = useCallback(
-    (event: React.MouseEvent, edge: Edge) => {
+    (event, edge) => {
       setEdges((eds) => eds.filter((e) => e.id !== edge.id));
     },
     [setEdges]
@@ -180,7 +175,7 @@ const FlowCanvas: React.FC = () => {
           attributionPosition="bottom-right"
           proOptions={{ hideAttribution: true }}
         >
-          <Background color="#10b981" gap={16} variant={BackgroundVariant.Dots} />
+          <Background color="#10b981" gap={16} variant="dots" />
           <Controls className="m-4" />
           <MiniMap className="rounded-lg bg-white border shadow-sm" />
           
@@ -215,7 +210,7 @@ const FlowCanvas: React.FC = () => {
   );
 };
 
-const FlowCanvasWithProvider: React.FC = () => (
+const FlowCanvasWithProvider = () => (
   <ReactFlowProvider>
     <FlowCanvas />
   </ReactFlowProvider>

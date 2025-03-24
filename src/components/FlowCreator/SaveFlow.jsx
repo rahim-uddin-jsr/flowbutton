@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const SaveFlow: React.FC = () => {
+const SaveFlow = () => {
   const { getNodes, getEdges } = useReactFlow();
   const { toast } = useToast();
 

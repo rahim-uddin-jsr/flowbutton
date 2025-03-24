@@ -1,7 +1,7 @@
 
-import { Node, Edge } from '@xyflow/react';
+import { MarkerType } from '@xyflow/react';
 
-export const initialNodes: Node[] = [
+export const initialNodes = [
   {
     id: 'onCall-1',
     type: 'onCall',
@@ -16,7 +16,7 @@ export const initialNodes: Node[] = [
   }
 ];
 
-export const initialEdges: Edge[] = [
+export const initialEdges = [
   {
     id: 'e-onCall-1-gather-1',
     source: 'onCall-1',

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
-const SendSMSNode: React.FC<any> = ({ data }) => {
+const SendSMSNode = ({ data }) => {
   return (
     <div className="flow-node-box sms">
       <Handle type="target" position={Position.Top} />

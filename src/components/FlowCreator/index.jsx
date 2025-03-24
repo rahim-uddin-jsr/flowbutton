@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import FlowCanvas from './FlowCanvas';
 import { cn } from '@/lib/utils';
 
-const FlowCreator: React.FC = () => {
+const FlowCreator = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

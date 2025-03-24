@@ -2,7 +2,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
-const GatherNode: React.FC<any> = ({ data }) => {
+const GatherNode = ({ data }) => {
   return (
     <div className="flow-node-box gather">
       <Handle type="target" position={Position.Top} />
