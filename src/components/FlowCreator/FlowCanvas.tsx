@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -12,9 +12,11 @@ import {
   Edge,
   Node,
   ReactFlowInstance,
-  ReactFlowProvider
+  ReactFlowProvider,
+  BackgroundVariant
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { Loader2 } from 'lucide-react';
 import NodePanel from './NodePanel';
 import { initialNodes, initialEdges } from './initialElements';
 import APIRequestNode from './nodes/APIRequestNode';
@@ -25,6 +27,8 @@ import CaptureDataNode from './nodes/CaptureDataNode';
 import SendSMSNode from './nodes/SendSMSNode';
 import HangupCallNode from './nodes/HangupCallNode';
 import OpenAINode from './nodes/OpenAINode';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const nodeTypes = {
   apiRequest: APIRequestNode,
@@ -42,9 +46,29 @@ const FlowCanvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   const onConnect = useCallback(
-    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection | Edge) => {
+      // Create a unique ID for the new edge
+      const newEdge = {
+        ...params,
+        id: `e-${params.source}-${params.target}-${new Date().getTime()}`,
+        animated: true,
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      };
+      setEdges((eds) => addEdge(newEdge, eds));
+    },
     [setEdges]
   );
 
@@ -82,9 +106,31 @@ const FlowCanvas: React.FC = () => {
     [reactFlowInstance, nodes, setNodes]
   );
 
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-gray-50">
+        <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
+        <span className="ml-2 text-lg font-medium text-gray-600">Loading Flow Editor...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full w-full overflow-hidden">
-      <NodePanel />
+      <Collapsible
+        open={isSidebarOpen}
+        onOpenChange={setIsSidebarOpen}
+        className="relative"
+      >
+        <CollapsibleContent className="h-full min-w-[240px] border-r bg-white shadow-sm transition-all">
+          <div className="p-4 font-medium text-gray-700 border-b">Node Palette</div>
+          <NodePanel />
+        </CollapsibleContent>
+        <CollapsibleTrigger className="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-1/2 rounded-full border bg-white p-1.5 shadow-md">
+          {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        </CollapsibleTrigger>
+      </Collapsible>
+      
       <div ref={reactFlowWrapper} className="flex-1 h-full">
         <ReactFlow
           nodes={nodes}
@@ -92,15 +138,19 @@ const FlowCanvas: React.FC = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          onInit={setReactFlowInstance}
+          onInit={(instance) => {
+            setReactFlowInstance(instance);
+            instance.fitView();
+          }}
           onDrop={onDrop}
           onDragOver={onDragOver}
           nodeTypes={nodeTypes}
+          deleteKeyCode={['Backspace', 'Delete']}
           fitView
           attributionPosition="bottom-right"
           proOptions={{ hideAttribution: true }}
         >
-          <Background color="#f8fafc" gap={16} />
+          <Background color="#10b981" gap={16} variant={BackgroundVariant.Dots} />
           <Controls className="m-4" />
           <MiniMap className="rounded-lg bg-white border shadow-sm" />
         </ReactFlow>
