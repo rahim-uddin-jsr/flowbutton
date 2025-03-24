@@ -60,14 +60,18 @@ const FlowCanvas: React.FC = () => {
 
   const onConnect = useCallback(
     (params: Connection | Edge) => {
-      // Create a unique ID for the new edge
+      // Create a new edge with the required properties
       const newEdge = {
         ...params,
         id: `e-${params.source}-${params.target}-${new Date().getTime()}`,
-        animated: true,
-        style: { stroke: '#10b981', strokeWidth: 2 }
+        // Make animated optional by using a ternary operator
+        // This fixes the type error
+        ...(params.animated !== undefined ? {} : { animated: true }),
+        // Same for style - only add if not already present
+        ...(params.style ? {} : { style: { stroke: '#10b981', strokeWidth: 2 } })
       };
-      setEdges((eds) => addEdge(newEdge, eds));
+      
+      setEdges((eds) => addEdge(newEdge as Edge, eds));
     },
     [setEdges]
   );
