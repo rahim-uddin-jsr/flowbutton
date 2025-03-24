@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -98,4 +92,131 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border: 1px solid #10b981;
+}
+
+.react-flow__node {
+  border-radius: 6px;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.react-flow__node.selected {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.react-flow__edge-path {
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.react-flow__controls {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 4px;
+}
+
+.react-flow__controls-button {
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.react-flow__controls-button:hover {
+  background-color: #f1f5f9;
+}
+
+.flow-node-box {
+  @apply bg-white rounded-lg shadow-md p-4 w-full border border-flow-node-border;
+  transition: all 0.2s ease-in-out;
+}
+
+.flow-node-box:hover {
+  @apply shadow-lg;
+  transform: translateY(-2px);
+}
+
+.flow-node-box.api {
+  @apply bg-green-50 border-green-300;
+}
+
+.flow-node-box.condition {
+  @apply bg-amber-50 border-amber-300;
+}
+
+.flow-node-box.gather {
+  @apply bg-blue-50 border-blue-300;
+}
+
+.flow-node-box.say {
+  @apply bg-purple-50 border-purple-300;
+}
+
+.flow-node-box.capture {
+  @apply bg-cyan-50 border-cyan-300;
+}
+
+.flow-node-box.sms {
+  @apply bg-violet-50 border-violet-300;
+}
+
+.flow-node-box.call {
+  @apply bg-rose-50 border-rose-300;
+}
+
+.flow-node-box.ai {
+  @apply bg-emerald-50 border-emerald-300;
+}
+
+.node-panel-item {
+  @apply flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200;
+}
+
+.node-panel-item:hover {
+  @apply shadow-sm transform translate-y-[-2px];
+}
+
+.node-panel-item.api {
+  @apply text-green-700;
+}
+
+.node-panel-item.condition {
+  @apply text-amber-700;
+}
+
+.node-panel-item.gather {
+  @apply text-blue-700;
+}
+
+.node-panel-item.say {
+  @apply text-purple-700;
+}
+
+.node-panel-item.capture {
+  @apply text-cyan-700;
+}
+
+.node-panel-item.sms {
+  @apply text-violet-700;
+}
+
+.node-panel-item.call {
+  @apply text-rose-700;
+}
+
+.node-panel-item.ai {
+  @apply text-emerald-700;
 }
