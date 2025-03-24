@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ReactFlow,
@@ -64,11 +63,10 @@ const FlowCanvas: React.FC = () => {
       const newEdge = {
         ...params,
         id: `e-${params.source}-${params.target}-${new Date().getTime()}`,
-        // Make animated optional by using a ternary operator
-        // This fixes the type error
-        ...(params.animated !== undefined ? {} : { animated: true }),
-        // Same for style - only add if not already present
-        ...(params.style ? {} : { style: { stroke: '#10b981', strokeWidth: 2 } })
+        // Add animated property as default
+        animated: true,
+        // Add style property as default
+        style: { stroke: '#10b981', strokeWidth: 2 }
       };
       
       setEdges((eds) => addEdge(newEdge as Edge, eds));
