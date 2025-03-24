@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ReactFlow,
@@ -12,10 +13,11 @@ import {
   Node,
   ReactFlowInstance,
   ReactFlowProvider,
-  BackgroundVariant
+  BackgroundVariant,
+  MarkerType
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X, Link as LinkIcon } from 'lucide-react';
 import NodePanel from './NodePanel';
 import { initialNodes, initialEdges } from './initialElements';
 import APIRequestNode from './nodes/APIRequestNode';
@@ -26,6 +28,7 @@ import CaptureDataNode from './nodes/CaptureDataNode';
 import SendSMSNode from './nodes/SendSMSNode';
 import HangupCallNode from './nodes/HangupCallNode';
 import OpenAINode from './nodes/OpenAINode';
+import OnCallNode from './nodes/OnCallNode';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -37,7 +40,8 @@ const nodeTypes = {
   captureData: CaptureDataNode,
   sendSMS: SendSMSNode,
   hangupCall: HangupCallNode,
-  openAI: OpenAINode
+  openAI: OpenAINode,
+  onCall: OnCallNode
 };
 
 const FlowCanvas: React.FC = () => {
@@ -47,6 +51,7 @@ const FlowCanvas: React.FC = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
   useEffect(() => {
     // Simulate loading time
@@ -55,6 +60,10 @@ const FlowCanvas: React.FC = () => {
     }, 1000);
     
     return () => clearTimeout(timer);
+  }, []);
+
+  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+    setSelectedNode(node);
   }, []);
 
   const onConnect = useCallback(
@@ -66,7 +75,12 @@ const FlowCanvas: React.FC = () => {
         // Add animated property as default
         animated: true,
         // Add style property as default
-        style: { stroke: '#10b981', strokeWidth: 2 }
+        style: { stroke: '#10b981', strokeWidth: 2 },
+        // Add marker end for arrow
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: '#10b981'
+        }
       };
       
       setEdges((eds) => addEdge(newEdge as Edge, eds));
@@ -108,6 +122,17 @@ const FlowCanvas: React.FC = () => {
     [reactFlowInstance, nodes, setNodes]
   );
 
+  const onEdgeDoubleClick = useCallback(
+    (event: React.MouseEvent, edge: Edge) => {
+      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    },
+    [setEdges]
+  );
+
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-gray-50">
@@ -148,6 +173,11 @@ const FlowCanvas: React.FC = () => {
           onDragOver={onDragOver}
           nodeTypes={nodeTypes}
           deleteKeyCode={['Backspace', 'Delete']}
+          onNodeClick={onNodeClick}
+          onEdgeDoubleClick={onEdgeDoubleClick}
+          onPaneClick={onPaneClick}
+          snapToGrid={true}
+          snapGrid={[15, 15]}
           fitView
           attributionPosition="bottom-right"
           proOptions={{ hideAttribution: true }}
@@ -155,6 +185,27 @@ const FlowCanvas: React.FC = () => {
           <Background color="#10b981" gap={16} variant={BackgroundVariant.Dots} />
           <Controls className="m-4" />
           <MiniMap className="rounded-lg bg-white border shadow-sm" />
+          
+          {selectedNode && (
+            <div className="absolute top-2 right-2 bg-white p-2 rounded-lg shadow-md z-10 border">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-medium text-sm">{selectedNode.type} Properties</span>
+                <button 
+                  onClick={() => setSelectedNode(null)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="text-xs text-gray-500">
+                ID: {selectedNode.id}
+              </div>
+              <div className="mt-2 text-xs text-blue-600 flex items-center cursor-pointer">
+                <LinkIcon className="h-3 w-3 mr-1" />
+                <span>Connect to another flow</span>
+              </div>
+            </div>
+          )}
         </ReactFlow>
       </div>
     </div>

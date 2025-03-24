@@ -8,6 +8,7 @@ interface NodeTypeItem {
 }
 
 const nodeTypes: NodeTypeItem[] = [
+  { type: 'onCall', label: 'On Call', className: 'call-start' },
   { type: 'gather', label: 'Gather', className: 'gather' },
   { type: 'say', label: 'Say', className: 'say' },
   { type: 'condition', label: 'Condition', className: 'condition' },
@@ -26,7 +27,7 @@ const NodePanel: React.FC = () => {
   };
 
   return (
-    <div className="w-72 h-full bg-white border-r overflow-auto p-4">
+    <div className="w-72 h-full bg-white overflow-auto p-4">
       <div className="mb-6">
         <h3 className="text-lg font-medium text-gray-800 mb-2">Flow Nodes</h3>
         <p className="text-sm text-gray-500">Drag and drop nodes to create your flow</p>
@@ -40,8 +41,8 @@ const NodePanel: React.FC = () => {
             onDragStart={(event) => onDragStart(event, item.type, item.label)}
             draggable
           >
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-${item.className}-100`}>
-              <div className={`w-4 h-4 bg-${item.className}-500 rounded-sm`}></div>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-${item.className === 'call-start' ? 'slate' : item.className}-100`}>
+              <div className={`w-4 h-4 bg-${item.className === 'call-start' ? 'slate' : item.className}-500 rounded-sm`}></div>
             </div>
             <span>{item.label}</span>
           </div>
@@ -51,6 +52,7 @@ const NodePanel: React.FC = () => {
       <div className="mt-8 pt-4 border-t">
         <p className="text-xs text-gray-400">
           Drag nodes onto the canvas to build your flow. Connect nodes by dragging from one handle to another.
+          Double-click on an edge to delete it.
         </p>
       </div>
     </div>
